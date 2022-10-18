@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BANANA</title>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    socket.on('updateValue', function (value) {
+        document.getElementById('counter').innerHTML = value;
+    })
+    function increment() {
+        socket.emit('increment');
+    }
+    function decrement() {
+        socket.emit('decrement');
+    }
+    function raz() {
+        socket.emit('raz');
+    }
+</script>
+<body>
+    <h1>Hello world !</h1>
+    <div id="counter">
+        0
+    </div>
+    <input type="button" onclick="increment()" value="Incrémenter">
+    <input type="button" onclick="decrement()" value="Décrémenter">
+    <input type="button" onclick="raz()" value="RàZ">
+</body>
+</html>

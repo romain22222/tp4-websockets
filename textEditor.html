@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text editor</title>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  function increaseSize() {
+    socket.emit('sizeAdd');
+  }
+  function decreaseSize() {
+    socket.emit('sizeMinus');
+  }
+  function changeColor() {
+    socket.emit('colorChange', document.getElementById('colorChanger').value);
+  }
+  socket.on('textUpdated', function (newText) {
+      if (newText !== document.getElementById('zone').innerText) {
+          document.getElementById('zone').innerText = newText;
+      }
+  })
+  socket.on('sizeEdit', function (size) {
+    document.getElementById('zone').style.fontSize = `${size}px`;
+  })
+  socket.on('colorEdit', function (color) {
+    document.getElementById('zone').style.color = color;
+    document.getElementById('colorChanger').value = color;
+  })
+</script>
+<body>
+  <h1>Text Editor !</h1>
+  <input type="button" onclick="increaseSize()" value="T+">
+  <input type="button" onclick="decreaseSize()" value="T-">
+  <label for="colorChanger">Changement de couleur</label>
+  <input id='colorChanger' type="color" onchange="changeColor()" value="#000000">
+  <div id='zone' contenteditable="true" style="height: available; width: available; border: 3px solid black">
+
+  </div>
+<script>
+    document.getElementById("zone").addEventListener("input", function() {
+            socket.emit('textChange', document.getElementById('zone').innerText);
+    }, false);
+</script>
+</body>
+</html>
